@@ -31,14 +31,15 @@ echo -e "\n\e[0;36m#############################################################
 echo -e "\nVerifying Alpamon enclave with IAS report . . .\n"
 echo -e "###############################################################\e[0m\n"
 START4="$(date +%s.%4N)"
+
 $VERIFY \
     --verbose --report-path=ias.report --sig-path=ias.sig \
     --mr-signer=$MR_SIGNER \
     --mr-enclave=$MR_ENCLAVE \
-    --allow-sw-hardening-needed --allow-debug-enclave | tee OUTPUT
+    --allow-sw-hardening-needed --allow-debug-enclave 2>&1 | tee -a OUTPUT
 SPLIT4="$(date +%s.%4N)"
 
-if grep -q "enclave attributes OK" OUTPUT; then
+if [[ $(grep -o "OK" OUTPUT | wc -l) -eq 3 ]]; then
     echo -e "\e[0;32m\n###############################################################\n"
     echo -e "[ Alpamon RA success ]\n\e[0m"
     F=1
@@ -56,6 +57,10 @@ S4=`echo "$SPLIT4 - $START4 "| bc`
 echo "Requesting report to IAS: 0${S3}" >> log
 echo "Verifying IAS report: 0${S4}" >> log
 cat log
+
+total=$(grep -oP '\d+\.\d+' log | awk '{sum += $1} END {print sum}')
+echo ""
+echo "Total ra time: $total"
 
 if [ ${F} -eq 1 ] ; then
     echo -e "\e[0;32m\n###############################################################\n\e[0m"
