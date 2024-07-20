@@ -60,11 +60,7 @@ cat log
 
 total=$(grep -oP '\d+\.\d+' log | awk '{sum += $1} END {print sum}')
 echo ""
-<<<<<<< HEAD:verify-enclave.sh
-echo "Total ra time: $total"
-=======
 echo "Total RA time: $total"
->>>>>>> a8863353ae8e09422e813059f5bf791a99aed488:run-alpacon.sh
 
 if [ ${F} -eq 1 ] ; then
     echo -e "\e[0;32m\n###############################################################\n\e[0m"
