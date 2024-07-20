@@ -10,7 +10,7 @@ loader.env.LD_LIBRARY_PATH = "/lib:/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}
 # Python's NumPy spawns as many threads as there are CPU cores, and each thread
 # consumes a chunk of memory, so on large machines 1G enclave size may be not enough.
 # We limit the number of spawned threads via OMP_NUM_THREADS env variable.
-loader.env.OMP_NUM_THREADS = "4"
+loader.env.OMP_NUM_THREADS = "8"
 
 loader.insecure__use_cmdline_argv = true
 
@@ -24,8 +24,6 @@ fs.mounts = [
   { path = "{{ path }}", uri = "file:{{ path }}" },
 {% endfor %}
   { path = "{{ entrypoint }}", uri = "file:{{ entrypoint }}" },
-  { path = "/etc/hosts", uri = "file:helper-files/hosts" },
-
   { type = "tmpfs", path = "/tmp" },
 ]
 
@@ -51,7 +49,6 @@ sgx.trusted_files = [
   "file:{{ path }}{{ '/' if path.is_dir() else '' }}",
 {% endfor %}
   "file:scripts/",
-  "file:helper-files/",
 ]
 
 sgx.allowed_files = [
